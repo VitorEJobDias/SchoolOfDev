@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using SchoolOfDevs.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using SchoolOfDevs.Entities;
 using SchoolOfDevs.Helpers;
-using SchoolOfDevs.Services.Interfaces;
 
 namespace SchoolOfDevs.Services
 {

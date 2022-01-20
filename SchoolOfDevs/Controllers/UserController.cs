@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using SchoolOfDevs.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using SchoolOfDevs.Entities;
-using SchoolOfDevs.Services.Interfaces;
 
 namespace SchoolOfDevs.Controllers
 {
