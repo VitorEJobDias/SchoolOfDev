@@ -16,6 +16,7 @@ namespace SchoolOfDevs.Services
 
         public async Task<Note> Create(Note note)
         {
+            note.CreatedAt = DateTime.Now;
             _dataContext.Notes.Add(note);
             await _dataContext.SaveChangesAsync();
 
@@ -27,7 +28,7 @@ namespace SchoolOfDevs.Services
             Note note = await _dataContext.Notes.SingleOrDefaultAsync(x => x.Id == id);
 
             if (note is null)
-                throw new Exception($"User {id} not found");
+                throw new Exception($"Note {id} not found");
 
             _dataContext.Notes.Remove(note);
             await _dataContext.SaveChangesAsync();
@@ -46,21 +47,25 @@ namespace SchoolOfDevs.Services
             return note;
         }
 
-        public async Task Update(Note user, int id)
+        public async Task Update(Note note, int id)
         {
-            if (user.Id != id)
+            if (note.Id != id)
                 throw new Exception("Route id differs Note id");
 
-            Note userDb = await _dataContext.Notes
+            note.UpdatedAt = DateTime.Now;
+
+            Note noteDb = await _dataContext.Notes
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id == id);
 
-            if (userDb is null)
+            if (noteDb is null)
             {
                 throw new Exception($"Note {id} not found");
             }
 
-            _dataContext.Entry(user).State = EntityState.Modified;
+            note.CreatedAt = noteDb.CreatedAt;
+
+            _dataContext.Entry(note).State = EntityState.Modified;
             await _dataContext.SaveChangesAsync();
         }
     }

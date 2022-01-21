@@ -68,6 +68,8 @@ namespace SchoolOfDevs.Services
                 throw new Exception($"Course {id} not found");
             }
 
+            course.CreatedAt = courseDb.CreatedAt;
+
             _dataContext.Entry(course).State = EntityState.Modified;
             await _dataContext.SaveChangesAsync();
         }

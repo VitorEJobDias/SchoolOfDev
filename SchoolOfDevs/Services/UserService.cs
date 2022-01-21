@@ -68,6 +68,8 @@ namespace SchoolOfDevs.Services
                 throw new Exception($"User {id} not found");
             }
 
+            user.CreatedAt = userDb.CreatedAt;
+
             _dataContext.Entry(user).State = EntityState.Modified;
             await _dataContext.SaveChangesAsync();
         }
