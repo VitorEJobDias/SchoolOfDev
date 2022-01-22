@@ -1,4 +1,5 @@
-﻿using SchoolOfDevs.Enuns;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using SchoolOfDevs.Enuns;
 
 namespace SchoolOfDevs.Entities
 {
@@ -10,5 +11,9 @@ namespace SchoolOfDevs.Entities
         public string Password { get; set; }
         public string FirstName { get; set; }
         public TypeUser TypeUser { get; set; }
+        [NotMapped]
+        public string ConfirmPassword { get; set; }
+        [NotMapped]
+        public string CurrentPassword { get; set; }
     }
 }
