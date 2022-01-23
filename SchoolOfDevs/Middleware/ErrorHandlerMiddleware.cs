@@ -25,9 +25,9 @@ namespace SchoolOfDevs.Middleware
                 response.ContentType = "application/json";
                 response.StatusCode = error switch
                 {
-                    BadRequestException => (int)HttpStatusCode.BadRequest,
-                    KeyNotFoundException => (int)HttpStatusCode.NotFound,
-                    ForbiddenException => (int)HttpStatusCode.Forbidden,
+                    BadRequestException => (int)HttpStatusCode.BadRequest, // custom application error
+                    KeyNotFoundException => (int)HttpStatusCode.NotFound, // not found error
+                    ForbiddenException => (int)HttpStatusCode.Forbidden, // unathorized
                     _ => (int)HttpStatusCode.InternalServerError
                 };
 

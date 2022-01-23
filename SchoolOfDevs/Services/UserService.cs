@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BC = BCrypt.Net.BCrypt;
 using SchoolOfDevs.Entities;
 using SchoolOfDevs.Helpers;
+using SchoolOfDevs.Exceptions;
 
 namespace SchoolOfDevs.Services
 {
@@ -19,7 +20,7 @@ namespace SchoolOfDevs.Services
         {
             if (!user.Password.Equals(user.ConfirmPassword))
             {
-                throw new Exception("Password does not match ConfirmPassword");
+                throw new BadRequestException("Password does not match ConfirmPassword");
             }
 
             User userDb = await _dataContext.Users
@@ -27,7 +28,7 @@ namespace SchoolOfDevs.Services
                 .SingleOrDefaultAsync(x => x.UserName == user.UserName);
             if (userDb is not null)
             {
-                throw new Exception($"UserName { user.UserName } already exist.");
+                throw new BadRequestException($"UserName { user.UserName } already exist.");
             }
 
             user.Password = BC.HashPassword(user.Password);
@@ -43,7 +44,7 @@ namespace SchoolOfDevs.Services
             User user = await _dataContext.Users.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user is null)
-                throw new Exception($"User {id} not found");
+                throw new KeyNotFoundException($"User {id} not found");
 
             _dataContext.Users.Remove(user);
             await _dataContext.SaveChangesAsync();
@@ -57,7 +58,7 @@ namespace SchoolOfDevs.Services
             User user = await _dataContext.Users.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user is null)
-                throw new Exception($"User {id} not found");
+                throw new KeyNotFoundException($"User {id} not found");
 
             return user;
         }
@@ -65,9 +66,9 @@ namespace SchoolOfDevs.Services
         public async Task Update(User user, int id)
         {
             if (user.Id != id)
-                throw new Exception("Route id differs User id");
+                throw new BadRequestException("Route id differs User id");
             else if (!user.Password.Equals(user.ConfirmPassword))
-                throw new Exception("Password does not match ConfirmPassword");
+                throw new BadRequestException("Password does not match ConfirmPassword");
             
 
             User userDb = await _dataContext.Users
@@ -75,9 +76,9 @@ namespace SchoolOfDevs.Services
                 .SingleOrDefaultAsync(x => x.Id == id);
 
             if (userDb is null)
-                throw new Exception($"User {id} not found");
+                throw new KeyNotFoundException($"User {id} not found");
             else if (!BC.Verify(user.CurrentPassword, userDb.Password))
-                throw new Exception("Incorrect Password");
+                throw new BadRequestException("Incorrect Password");
 
             user.CreatedAt = userDb.CreatedAt;
             user.Password = BC.HashPassword(user.Password);

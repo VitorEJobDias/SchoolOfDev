@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SchoolOfDevs.Entities;
 using SchoolOfDevs.Helpers;
+using SchoolOfDevs.Exceptions;
 
 namespace SchoolOfDevs.Services
 {
@@ -16,14 +17,6 @@ namespace SchoolOfDevs.Services
 
         public async Task<Course> Create(Course course)
         {
-            Course courseDb = await _dataContext.Courses
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Name == course.Name);
-            if (courseDb is not null)
-            {
-                throw new Exception($"Name { course.Name } already exist.");
-            }
-
             _dataContext.Courses.Add(course);
             await _dataContext.SaveChangesAsync();
 
@@ -35,7 +28,7 @@ namespace SchoolOfDevs.Services
             Course course = await _dataContext.Courses.SingleOrDefaultAsync(x => x.Id == id);
 
             if (course is null)
-                throw new Exception($"Course {id} not found");
+                throw new KeyNotFoundException($"Course {id} not found");
 
             _dataContext.Courses.Remove(course);
             await _dataContext.SaveChangesAsync();
@@ -49,7 +42,7 @@ namespace SchoolOfDevs.Services
             Course course = await _dataContext.Courses.SingleOrDefaultAsync(x => x.Id == id);
 
             if (course is null)
-                throw new Exception($"Course {id} not found");
+                throw new KeyNotFoundException($"Course {id} not found");
 
             return course;
         }
@@ -57,7 +50,7 @@ namespace SchoolOfDevs.Services
         public async Task Update(Course course, int id)
         {
             if (course.Id != id)
-                throw new Exception("Route id differs Course id");
+                throw new BadRequestException("Route id differs Course id");
 
             Course courseDb = await _dataContext.Courses
                 .AsNoTracking()
@@ -65,7 +58,7 @@ namespace SchoolOfDevs.Services
 
             if (courseDb is null)
             {
-                throw new Exception($"Course {id} not found");
+                throw new KeyNotFoundException($"Course {id} not found");
             }
 
             course.CreatedAt = courseDb.CreatedAt;
