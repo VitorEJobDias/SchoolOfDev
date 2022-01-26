@@ -15,5 +15,8 @@ namespace SchoolOfDevs.Entities
         public string ConfirmPassword { get; set; }
         [NotMapped]
         public string CurrentPassword { get; set; }
+        public ICollection<Course> CoursesTeaching { get; set; }
+        public ICollection<Course> CoursesStuding { get; set; }
+        public List<StudentCourse> StudentCourses { get; set; }
     }
 }
